@@ -1,6 +1,6 @@
 # GameCode
 
-Developed with Unreal Engine 4
+Developed with Unreal Engine 4.
 If you want to open it in unreal right-click uproject file and click generate visual studio files.
 After that double click uproject file
 
