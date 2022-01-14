@@ -6,7 +6,7 @@ After that double click uproject file
 
 Current features:
 First person/Third person (by changing GameMode)
-Move - WASD
+Move - WASD\n
 Run - Shift
 Crouch - Ctrl
 Jump - Spacebar
