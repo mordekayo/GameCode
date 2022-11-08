@@ -64,6 +64,7 @@ public:
 	virtual void TurnAtRate(float Value) {};
 	virtual void LookUpAtRate(float Value) {};
 	virtual void ChangeCrouchState();
+	virtual void ChangeProneState();
 
 	virtual void StartSprint();
 	virtual void StopSprint();
@@ -73,6 +74,10 @@ public:
 	virtual void SwimRight(float Value);
 	virtual void SwimUp(float Value);
 
+	bool bIsProning;
+	void Prone();
+	void UnProne();
+	
 	void Mantle(bool bForce = false);
 
 	void StartFire();
@@ -172,6 +177,7 @@ protected:
 	virtual bool CanSprint();
 
 	virtual bool CanCrouch();
+	virtual bool CanProne();
 
 	bool CanMantle() const; 
 
@@ -222,7 +228,7 @@ private:
 
 	UFUNCTION(exec)
 	void ToggleLedgeDetectionDebugDraw() { bIsLedgeDetectionDebugDrawEnabled = !bIsLedgeDetectionDebugDrawEnabled;  }
-
+	
 	bool bIsSprintRequested = false;
 	bool bIsMantleRequested = false;
 	void TryChangeSprintState(float DeltaTime);

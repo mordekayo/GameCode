@@ -86,9 +86,39 @@ void AGCBaseCharacter::ChangeCrouchState()
 	}
 }
 
+void AGCBaseCharacter::ChangeProneState()
+{
+	if (GetBaseCharacterMovementComponent()->IsProning())
+	{
+		UnProne();
+	}
+	else if (CanCrouch())
+	{
+		Prone();
+	}
+}
+
+void AGCBaseCharacter::Prone()
+{
+	if (CanCrouch())
+	{
+		GetBaseCharacterMovementComponent()->bWantsToCrouch = true;
+	}
+}
+
+void AGCBaseCharacter::UnProne()
+{
+	GetBaseCharacterMovementComponent()->bWantsToCrouch = false;
+}
+
 bool AGCBaseCharacter::CanCrouch()
 {
 	return GetCharacterMovement()->IsMovingOnGround();
+}
+
+bool AGCBaseCharacter::CanProne()
+{
+	return GetCharacterMovement()->IsCrouching();
 }
 
 bool AGCBaseCharacter::CanMantle() const
@@ -145,7 +175,7 @@ void AGCBaseCharacter::OnSprintEnd_Implementation()
 bool AGCBaseCharacter::CanSprint()
 {
 	return GetCharacterMovement()->IsMovingOnGround() && !GCBaseCharacterMovementComponent->IsOutOfStamina() &&
-		!GCBaseCharacterMovementComponent->IsCrouching();
+		!GCBaseCharacterMovementComponent->IsCrouching() && !GCBaseCharacterMovementComponent->IsProning();
 }
 
 const FMantlingSettings& AGCBaseCharacter::GetMantlingSettings(float LedgeHeight) const

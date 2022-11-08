@@ -70,10 +70,13 @@ public:
 	FORCEINLINE bool IsOutOfStamina() const { return bIsOutOfStamina; }
 	void SetIsOutOfStamina(bool bIsOutOfStamina_In);
 
+	bool IsProning() const {return bIsProning; }
 	bool IsSprinting() const { return bIsSprinting; }
 	bool IsSwimming() const { return bIsSwimming; }
 	virtual float GetMaxSpeed() const override;
 
+	bool bWantsToProne = false;
+	
 	void StartSprint();
 	void StopSprint();
 
@@ -103,6 +106,13 @@ public:
 	float GetCurrentMoveForwardInput();
 	float GetCurrentMoveRightInput();
 
+	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
+	virtual void UpdateCharacterStateAfterMovement(float DeltaSeconds) override;
+
+	bool CanProneInCurrentState() const;
+	
+	UPROPERTY(Category="Character Movement (General Settings)", VisibleInstanceOnly, BlueprintReadWrite, AdvancedDisplay)
+	uint8 bProneMaintainsBaseLocation:1;
 protected:
 
 	virtual void PhysCustom(float DeltaTime, int32 Iterations) override;
@@ -122,6 +132,12 @@ protected:
 	void OnZiplineDelayTimerElapsed();
 	class AGCBaseCharacter* GetBaseCharacterOwner() const;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character movement: prone", meta = (ClampMin = 0.0f, UIMin = 0.0f))
+	float ProneCapsuleRadius = 40.0f; // Радуиус капсулы в состоянии лежа
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character movement: prone", meta = (ClampMin = 0.0f, UIMin = 0.0f))
+	float ProneCapsuleHalfHeight = 40.0f; // Половина высоты капсулы в состоянии лежа.
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character movement: sprint", meta = (ClampMin = 0.0f, UIMin = 0.0f))
 	float SprintSpeed = 1000.0f;
 
@@ -204,6 +220,7 @@ private:
 	bool bIsSwimming = false;
 	bool bIsOutOfStamina;
 	bool bIsSliding;
+	bool bIsProning;
 	
 	FTimerHandle SlidingTimer;
 	FTimerHandle SlidingEndTimer;
