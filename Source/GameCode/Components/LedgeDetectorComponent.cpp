@@ -85,7 +85,7 @@ bool ULedgeDetectorComponent::DetectLedge(OUT FLedgeDescription& LedgeDescriptio
 
 	LedgeDescription.Location = DownwardTraceHitResult.ImpactPoint;
 	LedgeDescription.MantledCharacterLocation = OverlapLocation;
-	LedgeDescription.LedgeActor = DownwardTraceHitResult.Actor;
+	LedgeDescription.LedgeActor = DownwardTraceHitResult.GetActor();
 	if (LedgeDescription.LedgeActor.IsValid())
 	{
 		if (LedgeDescription.LedgeActor->IsA<AZipline>())
