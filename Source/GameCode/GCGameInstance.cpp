@@ -9,15 +9,15 @@ bool UGCGameInstance::ProcessConsoleExec(const TCHAR* Cmd, FOutputDevice& Ar, UO
 
 	if (!bResult)
 	{
-		TArray<UGameInstanceSubsystem*> Subsystems = GetSubsystemArray<UGameInstanceSubsystem>();
-		for (UGameInstanceSubsystem* Subsystem : Subsystems)
-		{
-			bResult |= Subsystem->ProcessConsoleExec(Cmd, Ar, Executor);
-			if (bResult)
-			{
-				break;
-			}
-		}
+		//TArray<UGameInstanceSubsystem*> Subsystems = GetSubsystemArray<UGameInstanceSubsystem>();
+		//for (UGameInstanceSubsystem* Subsystem : Subsystems)
+		//{
+		//	bResult |= Subsystem->ProcessConsoleExec(Cmd, Ar, Executor);
+		//	if (bResult)
+		//	{
+		//		break;
+		//	}
+		//}
 	}
 
 	return bResult;
