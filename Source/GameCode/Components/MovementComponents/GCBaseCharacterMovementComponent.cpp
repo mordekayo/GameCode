@@ -10,6 +10,7 @@
 #include "GameFramework/Actor.h"
 #include "../../Characters/GCBaseCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "TimerManager.h"
 #include "../WallRunComponent.h"
 #include "../../Utils/GCTraceUtils.h"
 #include "../../Subsystems/DebugSubsystem.h"

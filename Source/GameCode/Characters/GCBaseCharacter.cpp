@@ -18,6 +18,8 @@
 #include "GameFramework/PhysicsVolume.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Actors/Equipment/Weapons/RangeWeaponItem.h"
+#include "Curves/CurveFloat.h"
+#include "Engine/DamageEvents.h"
 
 AGCBaseCharacter::AGCBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer.SetDefaultSubobjectClass<UGCBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))

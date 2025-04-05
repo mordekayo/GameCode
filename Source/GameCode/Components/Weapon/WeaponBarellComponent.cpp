@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Engine/DamageEvents.h"
 
 void UWeaponBarellComponent::Shot(FVector ShotStart, FVector ShotDirection, AController* Controller)
 {

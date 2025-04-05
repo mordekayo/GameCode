@@ -7,7 +7,9 @@
 #include "../../Subsystems/DebugSubsystem.h"
 #include "Components/CapsuleComponent.h" 
 #include "DrawDebugHelpers.h"
+#include "TimerManager.h"
 #include "../../GameCodeTypes.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/PhysicsVolume.h"
 
 // Sets default values for this component's properties

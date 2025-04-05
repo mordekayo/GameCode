@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "../Subsystems/DebugSubsystem.h"
 #include "../Actors/Interactive/Environment/Zipline.h"
+#include "Components/StaticMeshComponent.h"
 
 // Called when the game starts
 void ULedgeDetectorComponent::BeginPlay()
