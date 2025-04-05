@@ -4,6 +4,7 @@ Intermediate
 Saved
 .vscode
 .vs
+.vsconfig
 *.VC.db
 *.opensdf
 *.opendb
@@ -12,3 +13,6 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+.idea
+*.sln.DotSettings.user
