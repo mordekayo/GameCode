@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Curves/CurveVector.h"
 #include "../Components/MovementComponents/GCBaseCharacterMovementComponent.h"
 #include "GCBaseCharacter.generated.h"
 
@@ -57,6 +56,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual void MoveForward(float Value) {};
 	virtual void MoveRight(float Value) {};
 	virtual void Turn(float Value) {};
@@ -104,6 +105,12 @@ public:
 
 	bool IsLedgeDetectionDebugDrawEnabled() const { return bIsLedgeDetectionDebugDrawEnabled; }
 
+	UPROPERTY(ReplicatedUsing=OnRep_IsMantling)
+	bool bIsMantling;
+
+	UFUNCTION()
+	void OnRep_IsMantling(bool bWasMantling);
+	
 	virtual bool CanJumpInternal_Implementation() const;
 
 	class UGCBaseCharacterMovementComponent* GetBaseCharacterMovementComponent() const;

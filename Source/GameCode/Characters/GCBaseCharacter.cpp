@@ -20,6 +20,7 @@
 #include "Actors/Equipment/Weapons/RangeWeaponItem.h"
 #include "Curves/CurveFloat.h"
 #include "Engine/DamageEvents.h"
+#include "Net/UnrealNetwork.h"
 
 AGCBaseCharacter::AGCBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer.SetDefaultSubobjectClass<UGCBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -59,6 +60,12 @@ void AGCBaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	GCPlayerController = Cast<AGCPlayerController>(NewController);
+}
+
+void AGCBaseCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AGCBaseCharacter, bIsMantling);
 }
 
 UWallRunComponent* AGCBaseCharacter::GetWallRunComponent()
@@ -235,6 +242,8 @@ void AGCBaseCharacter::Mantle(bool bForce /*= false*/)
 	FLedgeDescription LedgeDescription;
 	if (LedgeDetectorComponent->DetectLedge(LedgeDescription))
 	{
+		bIsMantling = true;
+		
 		FMantlingMovementParameters MantlingParameters;
 
 		MantlingParameters.InitialCharacterLocation = GetActorLocation();
@@ -243,7 +252,6 @@ void AGCBaseCharacter::Mantle(bool bForce /*= false*/)
 		MantlingParameters.TargetCharacterRotation = LedgeDescription.Rotation;
 		MantlingParameters.LedgeActor = LedgeDescription.LedgeActor;
 		MantlingParameters.LedgeActorInitialLocation = LedgeDescription.LedgeActorInitialLocation;
-
 
 		float MantlingHeight = (LedgeDescription.Location - LedgeDescription.CurrentCharacterBottom).Z;
 		const FMantlingSettings& MantlingSettings =	GCBaseCharacterMovementComponent->IsSwimming() ? HighMantleSettings : GetMantlingSettings(MantlingHeight);
@@ -263,13 +271,14 @@ void AGCBaseCharacter::Mantle(bool bForce /*= false*/)
 		MantlingParameters.InitialAnimationCharacterLocation = MantlingParameters.TargetCharacterLocation - MantlingSettings.AnimationCorrectionZ * FVector::UpVector
 			+ MantlingSettings.AnimationCorrectionXY * LedgeDescription.LedgeNormal;
 
-		GCBaseCharacterMovementComponent->StartMantle(MantlingParameters);
+		if (IsLocallyControlled() || GetLocalRole() == ROLE_Authority)
+		{
+			GCBaseCharacterMovementComponent->StartMantle(MantlingParameters);
+		}
 
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(MantlingSettings.MantlingMontage, 1.0f, EMontagePlayReturnType::Duration, MantlingParameters.StartTime);
 		OnMantle(MantlingSettings, MantlingParameters.StartTime);
-
-		GEngine->AddOnScreenDebugMessage(701, 1.0f, FColor::Blue, FString::Printf(TEXT("MantlingParameters.StartTime: %f.2"), MantlingParameters.StartTime));
 	}
 }
 
@@ -340,7 +349,7 @@ bool AGCBaseCharacter::IsSwimmingUnderWater() const
 	
 	if (GetCharacterMovement()->IsSwimming())
 	{
-		FVector HeadPosition = GetMesh()->GetSocketLocation(FName("head")); // FName(“head”) should be saved as a string constant 
+		FVector HeadPosition = GetMesh()->GetSocketLocation(FName("head")); // FName(ï¿½headï¿½) should be saved as a string constant 
 		APhysicsVolume* Volume = GetCharacterMovement()->GetPhysicsVolume();
 		float VolumeTopPlane = Volume->GetActorLocation().Z + Volume->GetBounds().BoxExtent.Z * Volume->GetActorScale3D().Z;
 		if (HeadPosition.Z < VolumeTopPlane)
@@ -349,6 +358,17 @@ bool AGCBaseCharacter::IsSwimmingUnderWater() const
 		}
 	}
 	return false;
+}
+
+void AGCBaseCharacter::OnRep_IsMantling(bool bWasMantling)
+{
+	if (GetLocalRole() == ROLE_SimulatedProxy)
+	{
+		if (!bWasMantling && bIsMantling)
+		{
+			Mantle(true);
+		}
+	}
 }
 
 bool AGCBaseCharacter::CanJumpInternal_Implementation() const
