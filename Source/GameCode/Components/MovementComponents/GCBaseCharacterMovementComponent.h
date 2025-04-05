@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "../LedgeDetectorComponent.h"
 #include "../WallRunComponent.h"
 #include "GCBaseCharacterMovementComponent.generated.h"
 
@@ -56,6 +55,7 @@ class GAMECODE_API UGCBaseCharacterMovementComponent : public UCharacterMovement
 {
 	GENERATED_BODY()
 
+	friend class FSavedMove_GC;
 public:
 	void CacheForwardMovementInput(float MoveForwardInput);
 	void CacheRightMovementInput(float MoveRigthInput);
@@ -103,6 +103,9 @@ public:
 	float GetCurrentMoveForwardInput();
 	float GetCurrentMoveRightInput();
 
+	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
+	virtual FNetworkPredictionData_Client* GetPredictionData_Client() const override;
+	
 protected:
 
 	virtual void PhysCustom(float DeltaTime, int32 Iterations) override;
@@ -220,4 +223,32 @@ private:
 	const AZipline* CurrentZipline = nullptr;
 	FTimerHandle ZiplineDelayTimer;
 	bool bIsZiplineDelayTimerElapsed = false;
+};
+
+class FSavedMove_GC : public FSavedMove_Character
+{
+	typedef FSavedMove_Character Super;
+
+public:
+	virtual void Clear() override;
+
+	virtual uint8 GetCompressedFlags() const override;
+
+	virtual	bool CanCombineWith(const FSavedMovePtr& NewMovePtr, ACharacter* InCharacter, float MaxDelta) const override;
+
+	virtual void SetMoveFor(ACharacter* Character, float InDeltaTime, FVector const& NewAccel, class FNetworkPredictionData_Client_Character& ClientData) override;
+
+	virtual void PrepMoveFor(ACharacter* Character) override;
+private:
+	uint8 bSavedIsSprinting : 1;
+};
+
+class FNetworkPredictionData_Client_Character_GC : public FNetworkPredictionData_Client_Character
+{
+	typedef FNetworkPredictionData_Client_Character Super;
+
+public:
+	FNetworkPredictionData_Client_Character_GC(const UCharacterMovementComponent& ClientMovement);
+
+	virtual FSavedMovePtr AllocateNewMove() override;
 };
