@@ -22,6 +22,8 @@ void UGCBaseCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		return;
 	}
+
+	bIsAiming = CachedBaseCharacter->IsAiming();
 	
 	UGCBaseCharacterMovementComponent* CharacterMovement = CachedBaseCharacter->GetBaseCharacterMovementComponent();
 	Speed = CharacterMovement->Velocity.Size();

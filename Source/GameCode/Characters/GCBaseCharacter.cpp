@@ -300,6 +300,21 @@ void AGCBaseCharacter::StopFire()
 	}
 }
 
+void AGCBaseCharacter::StartAiming()
+{
+	bIsAiming = true;
+}
+
+void AGCBaseCharacter::StopAiming()
+{
+	bIsAiming = false;
+}
+
+bool AGCBaseCharacter::IsAiming() const
+{
+	return bIsAiming;
+}
+
 void AGCBaseCharacter::OnMantle(const FMantlingSettings& MantlingSettings, float MantlingAnimationStartTime)
 {
 

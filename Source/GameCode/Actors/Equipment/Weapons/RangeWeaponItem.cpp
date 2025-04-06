@@ -59,13 +59,28 @@ void ARangeWeaponItem::MakeShot()
 	Controller->GetPlayerViewPoint(PlayerViewPoint, PlayerViewRotation);
 
 	FVector PlayerViewDirection = PlayerViewRotation.RotateVector(FVector::ForwardVector);
-
+	PlayerViewDirection +=
+		GetBulletSpreadOffset(FMath::RandRange(0.0f, FMath::DegreesToRadians(SpreadAngle)), PlayerViewRotation);
 	WeaponBarell->Shot(PlayerViewPoint, PlayerViewDirection, Controller);
 }
 
 float ARangeWeaponItem::GetShotTimerInterval()
 {
 	return 60.0f / RateOfFire;
+}
+
+FVector ARangeWeaponItem::GetBulletSpreadOffset(float Angle, FRotator ShotRotation)
+{
+	float SpreadSize = FMath::Tan(Angle);
+	float RotationAngle = FMath::RandRange(0.0f, 2 * PI);
+
+	float SpreadY = FMath::Cos(RotationAngle);
+	float SpreadZ = FMath::Sin(RotationAngle);
+
+	FVector Result = (ShotRotation.RotateVector(FVector::UpVector) * SpreadZ +
+					 ShotRotation.RotateVector(FVector::RightVector) * SpreadY) * SpreadSize;
+
+	return Result;
 }
 
 float ARangeWeaponItem::PlayAnimMontage(UAnimMontage* AnimMontage)

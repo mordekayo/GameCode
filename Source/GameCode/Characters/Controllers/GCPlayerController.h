@@ -44,8 +44,11 @@ private:
 	void StartSlide();
 	void StopSlide();
 	
-	void StartFire();
-	void StopFire();
+	void PlayerStartFire();
+	void PlayerStopFire();
+
+	void StartAiming();
+	void StopAiming();
 
 	void SwimForward(float Value);
 	void SwimRight(float Value);

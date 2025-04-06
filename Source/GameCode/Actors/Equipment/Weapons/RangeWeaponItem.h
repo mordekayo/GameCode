@@ -46,10 +46,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon | Parameters")
 	EWeaponFireMode WeaponFireMode = EWeaponFireMode::Single;
 
+	//Bullet spread half angle in degrees
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon | Parameters", meta = (ClampMin = 0.0f, UIMin = 0.0f, ClampMax = 2.0f, UIMax = 2.0f))
+	float SpreadAngle = 1.0f;
+
 private:
 	void MakeShot();
 	float GetShotTimerInterval();
 
+	FVector GetBulletSpreadOffset(float Angle, FRotator ShotRotation);
+	
 	float PlayAnimMontage(UAnimMontage* AnimMontage);
 
 	FTimerHandle ShotTimer;

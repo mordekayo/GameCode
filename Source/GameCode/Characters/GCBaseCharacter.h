@@ -79,6 +79,11 @@ public:
 	void StartFire();
 	void StopFire();
 
+	void StartAiming();
+	void StopAiming();
+
+	bool IsAiming() const;
+
 	virtual void OnMantle(const FMantlingSettings& MantlingSettings, float MantlingAnimationStartTime);
 
 	virtual void StartMantleRequesting();
@@ -230,6 +235,8 @@ private:
 	UFUNCTION(exec)
 	void ToggleLedgeDetectionDebugDraw() { bIsLedgeDetectionDebugDrawEnabled = !bIsLedgeDetectionDebugDrawEnabled;  }
 
+	bool bIsAiming = false;
+	
 	bool bIsSprintRequested = false;
 	bool bIsMantleRequested = false;
 	void TryChangeSprintState(float DeltaTime);

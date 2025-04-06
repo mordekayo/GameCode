@@ -45,8 +45,10 @@ void AGCPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Crouch", EInputEvent::IE_Pressed, this, &AGCPlayerController::ChangeCrouchState);
 	InputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AGCPlayerController::StartSprint);
 	InputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AGCPlayerController::StopSprint);
-	InputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AGCPlayerController::StartFire);
-	InputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AGCPlayerController::StopFire);
+	InputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AGCPlayerController::PlayerStartFire);
+	InputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AGCPlayerController::PlayerStopFire);
+	InputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &AGCPlayerController::StartAiming);
+	InputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &AGCPlayerController::StopAiming);
 }
 
 void AGCPlayerController::MoveForward(float Value)
@@ -224,7 +226,7 @@ void AGCPlayerController::StopSlide()
 	}
 }
 
-void AGCPlayerController::StartFire()
+void AGCPlayerController::PlayerStartFire()
 {
 	if (CachedBaseCharacter.IsValid())
 	{
@@ -232,10 +234,26 @@ void AGCPlayerController::StartFire()
 	}
 }
 
-void AGCPlayerController::StopFire()
+void AGCPlayerController::PlayerStopFire()
 {
 	if (CachedBaseCharacter.IsValid())
 	{
 		CachedBaseCharacter->StopFire();
+	}
+}
+
+void AGCPlayerController::StartAiming()
+{
+	if (CachedBaseCharacter.IsValid())
+	{
+		CachedBaseCharacter->StartAiming();
+	}
+}
+
+void AGCPlayerController::StopAiming()
+{
+	if (CachedBaseCharacter.IsValid())
+	{
+		CachedBaseCharacter->StopAiming();
 	}
 }
