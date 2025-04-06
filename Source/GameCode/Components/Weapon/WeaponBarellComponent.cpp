@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Components/DecalComponent.h"
 #include "Engine/DamageEvents.h"
 
 void UWeaponBarellComponent::Shot(FVector ShotStart, FVector ShotDirection, AController* Controller)
@@ -38,6 +39,14 @@ void UWeaponBarellComponent::Shot(FVector ShotStart, FVector ShotDirection, ACon
 				DistanceDamageCoef = FalloffDiagram->GetFloatValue((ShotEnd - MuzzleLocation).Size());
 			}
 			HitActor->TakeDamage(DamageAmount * DistanceDamageCoef, FDamageEvent{}, Controller, GetOwner());
+
+			UDecalComponent* DecalComponent = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DefaultDecalInfo.Material, DefaultDecalInfo.Size,
+				ShotResult.ImpactPoint, ShotResult.ImpactNormal.ToOrientationRotator());
+			if (IsValid(DecalComponent))
+			{
+				DecalComponent->SetFadeScreenSize(0.0001f);
+				DecalComponent->SetFadeOut(DefaultDecalInfo.LifeTime, DefaultDecalInfo.FadeoutTime);
+			}
 		}
 	}
 

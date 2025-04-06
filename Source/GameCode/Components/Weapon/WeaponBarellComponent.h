@@ -8,6 +8,24 @@
 
 class UNiagaraSystem;
 
+USTRUCT(BlueprintType)
+struct FDecalInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Decal info")
+	UMaterialInterface* Material;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Decal info")
+	FVector Size = FVector(5.0f, 5.0f, 5.0f);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Decal info")
+	float LifeTime = 10.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Decal info")
+	float FadeoutTime = 5.0f;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAMECODE_API UWeaponBarellComponent : public USceneComponent
 {
@@ -30,4 +48,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Barell attributes | Damage")
 	class UCurveFloat* FalloffDiagram;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Barell attributes | Decals")
+	FDecalInfo DefaultDecalInfo;
 };
